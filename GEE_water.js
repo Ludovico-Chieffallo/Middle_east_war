@@ -1,12 +1,13 @@
 // Definisci il poligono per Gaza
 var gaza = ee.Geometry.Rectangle([34.2, 31.2, 34.6, 31.6]);
 
-// Funzione per calcolare NDWI
+// Funzione per calcolare NDWI selezionando solo B3 e B8
 function getNDWI(startDate, endDate) {
   var image = ee.ImageCollection("COPERNICUS/S2")
     .filterBounds(gaza)
     .filterDate(ee.Date(startDate), ee.Date(endDate))
-    .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))  // Filtriamo le nuvole
+    .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", 20))  // Filtra nuvole
+    .select(["B3", "B8"])  // Selezioniamo solo le bande necessarie
     .median()
     .clip(gaza);
 
